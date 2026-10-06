@@ -19,7 +19,8 @@
     .brand { display:flex; align-items:center; gap:12px; font-weight:750; letter-spacing:.02em; }
     .brand-mark { width:42px; height:42px; border-radius:13px; background:var(--navy); display:grid; place-items:center; box-shadow:0 8px 24px rgba(13,37,56,.18); }
     .brand-mark svg { width:27px; }
-    .privacy { display:flex; gap:8px; align-items:center; color:var(--muted); font-size:.86rem; }
+    .privacy { display:flex; gap:8px; align-items:center; color:var(--muted); font-size:.86rem; border:0; background:transparent; cursor:pointer; padding:8px; border-radius:10px; }
+    .privacy:hover { background:#e8eef0; color:var(--ink); }
     .privacy svg { width:17px; }
     .intro { margin:0 0 24px; }
     .eyebrow { margin:0 0 5px; color:var(--blue); font-size:.83rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
@@ -51,7 +52,13 @@
     .chip.active { background:#e6f1f3; border-color:#8bb3bf; color:#174f63; font-weight:650; }
     .primary { width:100%; border:0; border-radius:15px; background:var(--orange); color:#2e1a08; font-weight:750; padding:14px 18px; cursor:pointer; box-shadow:0 9px 22px rgba(243,154,69,.24); transition:.18s; }
     .primary:hover { background:var(--orange2); transform:translateY(-1px); }
-    .primary:focus-visible,.mood:focus-visible,.chip:focus-visible,.action-btn:focus-visible,.quiet-btn:focus-visible { outline:3px solid rgba(31,101,126,.3); outline-offset:2px; }
+    .primary:focus-visible,.mood:focus-visible,.chip:focus-visible,.action-btn:focus-visible,.quiet-btn:focus-visible,.privacy:focus-visible,.release-pad:focus-visible,.icon-btn:focus-visible { outline:3px solid rgba(31,101,126,.3); outline-offset:2px; }
+    .edit-banner { display:none; align-items:center; justify-content:space-between; gap:12px; padding:10px 13px; margin:0 0 14px; border-radius:12px; background:#eef5f6; color:#315968; font-size:.84rem; }
+    .edit-banner.show { display:flex; }
+    .form-actions { display:flex; gap:10px; align-items:center; }
+    .form-actions .primary { flex:1; }
+    .cancel-edit { display:none; white-space:nowrap; }
+    .cancel-edit.show { display:block; }
     .insight { display:none; overflow:hidden; position:relative; border-color:#bbd5db; background:linear-gradient(145deg,#f9fdfd,#edf6f7); }
     .insight.show { display:block; animation:rise .35s ease both; }
     @keyframes rise { from { opacity:0; transform:translateY(8px); } }
@@ -65,11 +72,16 @@
     .empty { text-align:center; color:var(--muted); padding:43px 18px 25px; }
     .empty-dot { width:50px; height:50px; border-radius:50%; background:var(--soft); margin:0 auto 13px; display:grid; place-items:center; font-size:1.25rem; }
     .history-list { display:grid; gap:11px; margin-top:17px; }
-    .history-item { display:grid; grid-template-columns:42px 1fr auto; gap:11px; align-items:center; padding:11px 0; border-top:1px solid #edf1f2; }
+    .history-item { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:11px; align-items:center; padding:11px 0; border-top:1px solid #edf1f2; }
     .history-item:first-child { border-top:0; }
     .history-face { width:42px; height:42px; background:var(--soft); display:grid; place-items:center; border-radius:13px; font-size:1.3rem; }
-    .history-main strong { display:block; font-size:.91rem; }
+    .history-main { min-width:0; }
+    .history-main strong { display:block; font-size:.91rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .history-main span,.history-score { color:var(--muted); font-size:.76rem; }
+    .history-tools { display:flex; align-items:center; gap:2px; }
+    .icon-btn { width:34px; height:34px; border:0; border-radius:10px; background:transparent; color:var(--muted); cursor:pointer; display:grid; place-items:center; }
+    .icon-btn:hover { background:var(--soft); color:var(--ink); }
+    .icon-btn.delete:hover { background:#fff0f1; color:var(--danger); }
     .mini-chart { height:95px; display:flex; align-items:end; gap:8px; margin:17px 0 7px; padding:0 4px; }
     .bar-wrap { flex:1; display:grid; justify-items:center; gap:5px; height:100%; align-content:end; }
     .bar { width:min(28px,72%); border-radius:7px 7px 3px 3px; background:linear-gradient(#ffbd79,var(--orange)); min-height:8px; transition:.3s; }
@@ -78,20 +90,37 @@
     .safety strong { color:var(--ink); }
     .crisis { display:none; margin:0 0 18px; padding:15px; border-radius:14px; background:#fff1f2; border:1px solid #e7bdc1; color:#7f2630; font-size:.88rem; }
     .crisis.show { display:block; }
+    .release-card { position:relative; overflow:hidden; background:linear-gradient(145deg,#102c42,#19475b); color:#fff; }
+    .release-card p { margin:7px 0 18px; color:#c9d9df; font-size:.9rem; }
+    .release-pad { position:relative; width:100%; min-height:138px; border:1px solid rgba(255,255,255,.18); border-radius:22px; overflow:hidden; cursor:pointer; color:#fff; background:radial-gradient(circle at 50% 35%,#f5a75d,#d86d3e 62%,#9e4438); box-shadow:inset 0 -15px 30px rgba(68,20,19,.18),0 14px 30px rgba(7,25,37,.24); touch-action:manipulation; transition:transform .12s ease,filter .2s ease; }
+    .release-pad:active,.release-pad.hit { transform:scale(.965); filter:saturate(1.14); }
+    .release-label { position:relative; z-index:2; display:grid; place-items:center; gap:4px; pointer-events:none; }
+    .release-label strong { font-size:1.04rem; }
+    .release-label span { font-size:.78rem; opacity:.78; }
+    .ripple { position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; border:2px solid rgba(255,255,255,.72); border-radius:50%; pointer-events:none; animation:ripple .65s ease-out forwards; }
+    @keyframes ripple { to { transform:scale(9); opacity:0; } }
+    .release-foot { display:flex; justify-content:space-between; margin-top:12px; color:#c9d9df; font-size:.78rem; }
     dialog { border:0; padding:0; border-radius:28px; max-width:min(440px,calc(100vw - 32px)); width:100%; box-shadow:0 30px 80px rgba(0,0,0,.25); }
     dialog::backdrop { background:rgba(9,30,43,.68); backdrop-filter:blur(4px); }
     .breathe { padding:30px; text-align:center; background:#f8fbfb; }
     .breathe h2 { font-size:1.45rem; }
     .breathe p { color:var(--muted); margin:8px 0 24px; }
-    .orb { width:150px; height:150px; margin:0 auto 22px; border-radius:50%; display:grid; place-items:center; background:radial-gradient(circle at 35% 30%,#ffd09f,var(--orange)); color:#4b280b; font-weight:750; box-shadow:0 0 0 18px rgba(243,154,69,.12); transition:transform 4s ease-in-out; }
-    .orb.expand { transform:scale(1.22); }
+    .breath-ring { --progress:0; width:190px; height:190px; padding:8px; margin:4px auto 20px; border-radius:50%; background:conic-gradient(var(--orange) calc(var(--progress)*1%),#dfe8eb 0); display:grid; place-items:center; }
+    .orb { width:100%; height:100%; border-radius:50%; display:grid; place-items:center; background:radial-gradient(circle at 35% 30%,#ffd09f,var(--orange)); color:#4b280b; font-weight:750; box-shadow:inset 0 -14px 30px rgba(137,67,13,.12); transition:transform 4s ease-in-out; }
+    .orb.expand { transform:scale(1.04); }
     .timer { font-variant-numeric:tabular-nums; font-size:1.15rem; margin-bottom:20px; }
+    .phase-note { min-height:24px; color:var(--blue); font-weight:650; margin:-12px 0 15px; }
     .dialog-actions { display:flex; justify-content:center; gap:10px; }
     .secondary { border:1px solid var(--line); background:white; border-radius:12px; padding:10px 16px; cursor:pointer; }
+    .privacy-sheet { padding:28px; background:#fff; }
+    .privacy-sheet h2 { font-size:1.4rem; }
+    .privacy-sheet h3 { font-size:.95rem; margin:20px 0 5px; }
+    .privacy-sheet p,.privacy-sheet li { color:#526b77; font-size:.88rem; }
+    .privacy-sheet ul { padding-left:20px; }
     .toast { position:fixed; left:50%; bottom:24px; transform:translate(-50%,20px); background:var(--navy); color:#fff; padding:11px 17px; border-radius:999px; opacity:0; pointer-events:none; transition:.25s; z-index:10; box-shadow:0 12px 30px rgba(0,0,0,.2); }
     .toast.show { opacity:1; transform:translate(-50%,0); }
-    @media(max-width:820px) { .shell{padding:20px 18px 46px}.grid{grid-template-columns:1fr}.intro{margin-top:30px}.side{grid-template-columns:1fr}.privacy span{display:none} }
-    @media(max-width:540px) { .shell{padding:16px 14px 40px}header{margin-bottom:22px}.checkin,.side .card{padding:20px;border-radius:20px}.moods{grid-template-columns:repeat(3,1fr);gap:7px}.mood{padding:11px 4px}.grid,.side{gap:14px}.safety{margin-top:14px}h1{font-size:2rem}.intro p:last-child{font-size:.92rem} }
+    @media(max-width:820px) { .shell{padding:20px 18px 70px}.grid{grid-template-columns:1fr}.intro{margin-top:24px}.side{grid-template-columns:1fr}.privacy span{display:none}.side .insight{order:1}.side .release-card{order:2}.side .trend-card{order:3} }
+    @media(max-width:540px) { .shell{padding:14px 12px calc(86px + env(safe-area-inset-bottom))}header{margin-bottom:18px}.brand-mark{width:38px;height:38px}.intro{margin-top:18px;margin-bottom:18px}.checkin,.side .card{padding:18px;border-radius:20px}.moods{grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:22px}.mood{min-height:68px;padding:10px 4px}.chip{min-height:42px;padding:9px 14px}.grid,.side{gap:12px}.safety{margin-top:12px}h1{font-size:1.82rem}.intro p:last-child{font-size:.9rem}.primary{min-height:50px}.form-actions{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom));z-index:4;padding:7px;background:rgba(244,247,248,.92);border-radius:18px;backdrop-filter:blur(8px);margin:0 -7px -7px}.toast{bottom:calc(82px + env(safe-area-inset-bottom));max-width:calc(100vw - 28px);text-align:center}.history-item{grid-template-columns:40px minmax(0,1fr) auto}.history-score{display:none}.breath-ring{width:165px;height:165px}.breathe{padding:24px 18px}.release-pad{min-height:150px} }
     @media(prefers-reduced-motion:reduce) { *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important} }
   </style>
 </head>
@@ -99,7 +128,7 @@
   <main class="shell">
     <header>
       <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 22c7-1 7-11 15-11 6 1 9 8 6 13-3 6-12 9-21 5" fill="none" stroke="#ffb15a" stroke-width="3.5" stroke-linecap="round"/><circle cx="8" cy="22" r="3" fill="white"/></svg></span><span>心绪</span></div>
-      <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 10V8a6 6 0 0 1 12 0v2"/><rect x="4" y="10" width="16" height="11" rx="3"/></svg><span>记录仅保存在当前设备</span></div>
+      <button class="privacy" id="privacy-open" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 10V8a6 6 0 0 1 12 0v2"/><rect x="4" y="10" width="16" height="11" rx="3"/></svg><span>隐私与使用说明</span></button>
     </header>
 
     <section class="intro">
@@ -132,7 +161,8 @@
           <button class="chip" type="button" aria-pressed="false">学业</button><button class="chip" type="button" aria-pressed="false">工作</button><button class="chip" type="button" aria-pressed="false">人际</button><button class="chip" type="button" aria-pressed="false">家庭</button><button class="chip" type="button" aria-pressed="false">睡眠</button><button class="chip" type="button" aria-pressed="false">身体</button><button class="chip" type="button" aria-pressed="false">经济</button><button class="chip" type="button" aria-pressed="false">其他</button>
         </div>
         <div class="crisis" id="crisis" role="alert"><strong>你的安全比记录更重要。</strong><br>如果你正处于危险中，请立即联系身边可信任的人，并寻求当地紧急援助或专业支持。不要独自承担。</div>
-        <button class="primary" id="save" type="button">保存记录并获得建议</button>
+        <div class="edit-banner" id="edit-banner"><span>正在编辑一条过往记录</span><button class="quiet-btn" id="cancel-edit-top" type="button">退出编辑</button></div>
+        <div class="form-actions"><button class="primary" id="save" type="button">保存记录并获得建议</button><button class="secondary cancel-edit" id="cancel-edit" type="button">取消</button></div>
       </section>
 
       <aside class="side">
@@ -143,6 +173,15 @@
           <button class="action-btn" id="action" type="button">开始 1 分钟呼吸</button>
         </section>
 
+        <section class="card release-card" aria-labelledby="release-title">
+          <h2 id="release-title">情绪缓冲垫</h2>
+          <p>不用解释，也不会留下记录。想敲几下就敲几下。</p>
+          <button class="release-pad" id="release-pad" type="button" aria-label="点击释放情绪">
+            <span class="release-label"><strong id="release-message">敲一下，放下一点</strong><span>支持连续点击</span></span>
+          </button>
+          <div class="release-foot"><span id="release-count">0 次</span><span>只在此刻发生，不保存</span></div>
+        </section>
+
         <section class="card trend-card" aria-labelledby="trend-title">
           <div class="trend-head"><h2 id="trend-title">最近的心绪</h2><button class="quiet-btn" id="clear" type="button" hidden>清除记录</button></div>
           <div id="history"></div>
@@ -150,101 +189,89 @@
       </aside>
     </div>
 
-    <div class="safety"><span aria-hidden="true">◌</span><div><strong>温柔提醒</strong><br>心绪用于日常情绪记录与自我关怀，不提供医疗诊断，也不能替代心理咨询或医疗服务。</div></div>
+    <div class="safety"><span aria-hidden="true">◌</span><div><strong>温柔提醒</strong><br>心绪用于日常情绪记录与自我关怀，不提供医疗诊断，也不能替代心理咨询或医疗服务。 <button class="quiet-btn" id="privacy-open-bottom" type="button">查看隐私说明</button></div></div>
   </main>
 
   <dialog id="breath-dialog" aria-labelledby="breath-title">
-    <div class="breathe"><h2 id="breath-title">和呼吸待一分钟</h2><p>让注意力回到身体，不需要做得完美。</p><div class="orb" id="orb">准备好</div><div class="timer" id="timer">01:00</div><div class="dialog-actions"><button class="action-btn" id="breath-start" type="button">开始</button><button class="secondary" id="breath-close" type="button">稍后再做</button></div></div>
+    <div class="breathe"><h2 id="breath-title">和呼吸待一分钟</h2><p>跟随节奏：吸气 4 秒、停留 2 秒、呼气 6 秒。</p><div class="breath-ring" id="breath-ring"><div class="orb" id="orb">准备好</div></div><div class="phase-note" id="phase-note">5 轮舒缓呼吸</div><div class="timer" id="timer">01:00</div><div class="dialog-actions"><button class="action-btn" id="breath-start" type="button">开始</button><button class="secondary" id="breath-close" type="button">结束</button></div></div>
+  </dialog>
+  <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <div class="privacy-sheet"><h2 id="privacy-title">隐私与使用说明</h2><h3>你的记录如何保存</h3><p>情绪记录只保存在当前浏览器的本地存储中，不会上传到服务器，也不会跨设备同步。清除浏览器数据可能会永久删除记录。</p><h3>这项工具能做什么</h3><ul><li>帮助你观察日常情绪与可能的触发因素。</li><li>提供呼吸、短暂活动等一般性自我关怀建议。</li><li>不进行心理疾病诊断，也不替代医生或心理咨询师。</li></ul><h3>需要紧急帮助时</h3><p>如果你可能伤害自己或他人，请立即联系当地紧急服务、专业机构，或请可信任的人陪在你身边。</p><button class="action-btn" id="privacy-close" type="button">我知道了</button></div>
   </dialog>
   <div class="toast" id="toast" role="status">已保存今天的心绪</div>
 
   <script>
-    const moods = [...document.querySelectorAll('.mood')];
-    const chips = [...document.querySelectorAll('.chip')];
-    const intensity = document.querySelector('#intensity');
-    const note = document.querySelector('#note');
-    const saveBtn = document.querySelector('#save');
-    const insight = document.querySelector('#insight');
-    const historyEl = document.querySelector('#history');
-    const clearBtn = document.querySelector('#clear');
-    const dialog = document.querySelector('#breath-dialog');
-    let selectedMood = '';
-    let breathInterval;
-    const moodFaces = {开心:'😊',平静:'😌',焦虑:'😟',低落:'😔',愤怒:'😠',疲惫:'😮‍💨'};
-    const recommendations = {
+    const moods=[...document.querySelectorAll('.mood')],chips=[...document.querySelectorAll('.chip')];
+    const intensity=document.querySelector('#intensity'),note=document.querySelector('#note'),saveBtn=document.querySelector('#save'),insight=document.querySelector('#insight'),historyEl=document.querySelector('#history'),clearBtn=document.querySelector('#clear');
+    const breathDialog=document.querySelector('#breath-dialog'),privacyDialog=document.querySelector('#privacy-dialog');
+    let selectedMood='',editingId=null,breathInterval=null,breathElapsed=0,breathRunning=false,releaseCount=0;
+    const moodFaces={开心:'😊',平静:'😌',焦虑:'😟',低落:'😔',愤怒:'😠',疲惫:'😮‍💨'};
+    const recommendations={
       开心:['把这份好心情留久一点','写下此刻最值得感谢的一件小事。','记录一件好事'],
       平静:['让平静继续流动','试着闭眼一分钟，感受身体与椅子的接触。','开始 1 分钟呼吸'],
-      焦虑:['先让身体慢下来','把注意力放回呼吸：吸气 4 秒，呼气 6 秒。','开始 1 分钟呼吸'],
-      低落:['今天可以对自己轻一点','做一件只需要五分钟的小事，完成就已经很好。','开始轻量行动'],
-      愤怒:['给情绪留一点空间','先离开刺激源，缓慢走动五分钟，再决定下一步。','去走动 5 分钟'],
-      疲惫:['休息也是重要的行动','喝一杯水，伸展肩颈，然后允许自己暂停五分钟。','开始肩颈伸展']
+      焦虑:['先让身体慢下来','把注意力放回呼吸：吸气 4 秒，停留 2 秒，呼气 6 秒。','开始 1 分钟呼吸'],
+      低落:['今天可以对自己轻一点','做一件只需要五分钟的小事，完成就已经很好。','开始 1 分钟呼吸'],
+      愤怒:['给情绪留一点空间','先释放一点紧绷，再用一次慢呼气帮身体降速。','试试情绪缓冲垫'],
+      疲惫:['休息也是重要的行动','喝一杯水，伸展肩颈，然后允许自己暂停五分钟。','开始 1 分钟呼吸']
     };
 
-    const dateFmt = new Intl.DateTimeFormat('zh-CN',{month:'long',day:'numeric',weekday:'long'});
-    document.querySelector('#today').textContent = `${dateFmt.format(new Date())} · 情绪签到`;
-    moods.forEach(btn => btn.addEventListener('click',()=>selectMood(btn.dataset.mood)));
-    chips.forEach(btn => btn.addEventListener('click',()=>{btn.classList.toggle('active');btn.setAttribute('aria-pressed',String(btn.classList.contains('active')))}));
+    document.querySelector('#today').textContent=`${new Intl.DateTimeFormat('zh-CN',{month:'long',day:'numeric',weekday:'long'}).format(new Date())} · 情绪签到`;
+    moods.forEach(btn=>btn.addEventListener('click',()=>selectMood(btn.dataset.mood)));
+    chips.forEach(btn=>btn.addEventListener('click',()=>{btn.classList.toggle('active');btn.setAttribute('aria-pressed',String(btn.classList.contains('active')))}));
     intensity.addEventListener('input',()=>document.querySelector('#score').value=intensity.value);
     note.addEventListener('input',()=>{document.querySelector('#count').textContent=note.value.length;checkCrisis()});
 
-    function selectMood(mood){
-      selectedMood=mood;
-      moods.forEach(btn=>{const active=btn.dataset.mood===mood;btn.classList.toggle('active',active);btn.setAttribute('aria-checked',String(active))});
-    }
+    function selectMood(mood){selectedMood=mood;moods.forEach(btn=>{const active=btn.dataset.mood===mood;btn.classList.toggle('active',active);btn.setAttribute('aria-checked',String(active))})}
     function selectedTriggers(){return chips.filter(c=>c.classList.contains('active')).map(c=>c.textContent)}
-    function checkCrisis(){
-      const risky=/(自杀|不想活|伤害自己|结束生命|活不下去)/.test(note.value);
-      document.querySelector('#crisis').classList.toggle('show',risky);
-      return risky;
-    }
-    function getRecords(){try{return JSON.parse(localStorage.getItem('xinxu-records')||'[]')}catch{return []}}
-    function persist(record){const records=getRecords();records.unshift(record);localStorage.setItem('xinxu-records',JSON.stringify(records.slice(0,30)))}
-    function createRecord(data){
-      if(!data.mood || !moodFaces[data.mood]) throw new Error('请选择一种情绪');
-      const level=Number(data.intensity);
-      if(!Number.isInteger(level)||level<1||level>10) throw new Error('强度应为 1 到 10');
-      const record={id:Date.now(),mood:data.mood,face:moodFaces[data.mood],intensity:level,note:String(data.note||'').slice(0,200),triggers:Array.isArray(data.triggers)?data.triggers.slice(0,8):[],createdAt:new Date().toISOString()};
-      persist(record);renderInsight(record);renderHistory();return record;
+    function checkCrisis(){const risky=/(自杀|不想活|伤害自己|结束生命|活不下去)/.test(note.value);document.querySelector('#crisis').classList.toggle('show',risky);return risky}
+    function getRecords(){try{const records=JSON.parse(localStorage.getItem('xinxu-records')||'[]');return Array.isArray(records)?records:[]}catch{return []}}
+    function saveRecords(records){localStorage.setItem('xinxu-records',JSON.stringify(records.slice(0,30)))}
+    function saveRecord(data,id=null){
+      if(!data.mood||!moodFaces[data.mood])throw new Error('先选择一种最接近的情绪');
+      const level=Number(data.intensity);if(!Number.isInteger(level)||level<1||level>10)throw new Error('强度应为 1 到 10');
+      const records=getRecords(),old=id?records.find(r=>r.id===id):null;
+      const record={id:old?.id||Date.now(),mood:data.mood,face:moodFaces[data.mood],intensity:level,note:String(data.note||'').slice(0,200),triggers:Array.isArray(data.triggers)?data.triggers.slice(0,8):[],createdAt:old?.createdAt||new Date().toISOString(),updatedAt:id?new Date().toISOString():undefined};
+      if(old)records.splice(records.indexOf(old),1,record);else records.unshift(record);
+      saveRecords(records);renderInsight(record);renderHistory();return record;
     }
     saveBtn.addEventListener('click',()=>{
-      try{const record=createRecord({mood:selectedMood,intensity:Number(intensity.value),note:note.value,triggers:selectedTriggers()});showToast('已保存今天的心绪');if(checkCrisis())document.querySelector('#crisis').scrollIntoView({behavior:'smooth',block:'center'});return record}catch(err){showToast(err.message)}
+      try{const wasEditing=Boolean(editingId);const record=saveRecord({mood:selectedMood,intensity:Number(intensity.value),note:note.value,triggers:selectedTriggers()},editingId);const risky=checkCrisis();showToast(wasEditing?'记录已更新':'已保存，给自己一个小小的停顿');if(!risky)resetForm();saveBtn.textContent='✓ 已保存';setTimeout(()=>saveBtn.textContent=editingId?'更新这条记录':'保存记录并获得建议',1200);if(risky)document.querySelector('#crisis').scrollIntoView({behavior:'smooth',block:'center'});return record}catch(err){showToast(err.message)}
     });
-    function renderInsight(r){
-      const rec=recommendations[r.mood];
-      const factors=r.triggers.length?r.triggers.slice(0,2).join('和'):'今天发生的事情';
-      const high=r.intensity>=7?'这份感受有些强烈，先别要求自己马上解决所有问题。':'谢谢你停下来留意自己的感受。';
-      document.querySelector('#insight-title').textContent=rec[0];
-      document.querySelector('#insight-copy').textContent=`你记录的是${r.intensity}分的${r.mood}，可能与${factors}有关。${high} ${rec[1]}`;
-      document.querySelector('#action').textContent=rec[2];
-      insight.classList.add('show');
-    }
+    function resetForm(){editingId=null;selectedMood='';moods.forEach(b=>{b.classList.remove('active');b.setAttribute('aria-checked','false')});chips.forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});intensity.value=5;document.querySelector('#score').value=5;note.value='';document.querySelector('#count').textContent='0';document.querySelector('#crisis').classList.remove('show');document.querySelector('#edit-banner').classList.remove('show');document.querySelector('#cancel-edit').classList.remove('show');saveBtn.textContent='保存记录并获得建议'}
+    function editRecord(id){const r=getRecords().find(item=>item.id===id);if(!r)return;editingId=id;selectMood(r.mood);intensity.value=r.intensity;document.querySelector('#score').value=r.intensity;note.value=r.note||'';document.querySelector('#count').textContent=note.value.length;chips.forEach(b=>{const active=(r.triggers||[]).includes(b.textContent);b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});document.querySelector('#edit-banner').classList.add('show');document.querySelector('#cancel-edit').classList.add('show');saveBtn.textContent='更新这条记录';document.querySelector('#checkin-title').scrollIntoView({behavior:'smooth',block:'start'});note.focus()}
+    function deleteRecord(id){const records=getRecords(),target=records.find(r=>r.id===id);if(!target||!confirm(`删除 ${formatTime(target.createdAt)} 的${target.mood}记录？此操作无法撤销。`))return;saveRecords(records.filter(r=>r.id!==id));if(editingId===id)resetForm();renderHistory();showToast('记录已删除')}
+    function renderInsight(r){const rec=recommendations[r.mood],factors=r.triggers.length?r.triggers.slice(0,2).join('和'):'今天发生的事情',high=r.intensity>=7?'这份感受有些强烈，先别要求自己马上解决所有问题。':'谢谢你停下来留意自己的感受。';document.querySelector('#insight-title').textContent=rec[0];document.querySelector('#insight-copy').textContent=`你记录的是${r.intensity}分的${r.mood}，可能与${factors}有关。${high} ${rec[1]}`;document.querySelector('#action').textContent=rec[2];insight.dataset.mood=r.mood;insight.classList.add('show')}
     function renderHistory(){
       const records=getRecords();clearBtn.hidden=!records.length;
-      if(!records.length){historyEl.innerHTML='<div class="empty"><div class="empty-dot">○</div><div>完成第一次记录后<br>这里会出现你的情绪轨迹</div></div>';return}
+      if(!records.length){historyEl.innerHTML='<div class="empty"><div class="empty-dot">○</div><strong>还没有记录</strong><div>第一次不需要写很多<br>选一个情绪就可以开始</div><button class="quiet-btn" data-empty-start type="button">去记录此刻</button></div>';return}
       const recent=[...records].slice(0,7).reverse();
       const chart=`<div class="mini-chart" aria-label="最近情绪强度趋势">${recent.map(r=>`<div class="bar-wrap"><div class="bar" style="height:${Math.max(12,r.intensity*8)}%" title="${escapeHtml(r.mood)} ${r.intensity}分"></div><span class="bar-label">${new Date(r.createdAt).getDate()}日</span></div>`).join('')}</div>`;
-      const list=records.slice(0,3).map(r=>`<div class="history-item"><div class="history-face">${r.face}</div><div class="history-main"><strong>${escapeHtml(r.mood)} · ${escapeHtml((r.triggers||[]).join('、')||'随手记录')}</strong><span>${formatTime(r.createdAt)}</span></div><div class="history-score">${r.intensity}/10</div></div>`).join('');
+      const list=records.slice(0,6).map(r=>`<div class="history-item"><div class="history-face">${r.face}</div><div class="history-main"><strong>${escapeHtml(r.mood)} · ${escapeHtml((r.triggers||[]).join('、')||'随手记录')}</strong><span>${formatTime(r.createdAt)} · ${r.intensity}/10</span></div><div class="history-tools"><button class="icon-btn" data-edit="${r.id}" type="button" aria-label="编辑这条记录" title="编辑">✎</button><button class="icon-btn delete" data-delete="${r.id}" type="button" aria-label="删除这条记录" title="删除">×</button></div></div>`).join('');
       historyEl.innerHTML=chart+`<div class="history-list">${list}</div>`;
     }
+    historyEl.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)editRecord(Number(edit.dataset.edit));if(del)deleteRecord(Number(del.dataset.delete));if(e.target.closest('[data-empty-start]'))document.querySelector('#checkin-title').scrollIntoView({behavior:'smooth'})});
     function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-    function formatTime(d){const date=new Date(d);return new Intl.DateTimeFormat('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(date)}
-    function showToast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
-    clearBtn.addEventListener('click',()=>{if(confirm('确定清除当前设备上的全部记录吗？')){localStorage.removeItem('xinxu-records');insight.classList.remove('show');renderHistory();showToast('记录已清除')}});
-    document.querySelector('#action').addEventListener('click',()=>dialog.showModal());
-    document.querySelector('#breath-close').addEventListener('click',()=>{clearInterval(breathInterval);dialog.close()});
-    document.querySelector('#breath-start').addEventListener('click',startBreathing);
-    function startBreathing(){
-      clearInterval(breathInterval);let left=60;let inhale=true;const orb=document.querySelector('#orb');const timer=document.querySelector('#timer');
-      document.querySelector('#breath-start').textContent='重新开始';orb.textContent='吸气';orb.classList.add('expand');
-      breathInterval=setInterval(()=>{left--;timer.textContent=`00:${String(left).padStart(2,'0')}`;if(left%5===0){inhale=!inhale;orb.textContent=inhale?'吸气':'慢慢呼气';orb.classList.toggle('expand',inhale)}if(left<=0){clearInterval(breathInterval);orb.textContent='做得很好';orb.classList.remove('expand');showToast('你完成了一分钟呼吸')}},1000);
-    }
-    dialog.addEventListener('cancel',()=>clearInterval(breathInterval));
-    renderHistory();
+    function formatTime(d){return new Intl.DateTimeFormat('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(d))}
+    function showToast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>el.classList.remove('show'),2200)}
+    clearBtn.addEventListener('click',()=>{if(confirm('确定清除当前设备上的全部记录吗？此操作无法撤销。')){localStorage.removeItem('xinxu-records');resetForm();insight.classList.remove('show');renderHistory();showToast('当前设备上的记录已清除')}});
+    document.querySelector('#cancel-edit').addEventListener('click',resetForm);document.querySelector('#cancel-edit-top').addEventListener('click',resetForm);
 
-    function registerWebMCP(){
-      const context=document.modelContext;if(!context?.registerTool)return;
-      try{void Promise.resolve(context.registerTool({name:'create_emotion_entry',title:'记录当前情绪',description:'保存一条情绪、强度、触发因素和可选备注，并在页面展示建议。',inputSchema:{type:'object',properties:{mood:{type:'string',enum:Object.keys(moodFaces)},intensity:{type:'integer',minimum:1,maximum:10},triggers:{type:'array',items:{type:'string'},maxItems:8},note:{type:'string',maxLength:200}},required:['mood','intensity'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){const record=createRecord(input);return{id:record.id,mood:record.mood,intensity:record.intensity,saved:true}}})).catch(()=>{});}catch{}
-    }
+    document.querySelector('#action').addEventListener('click',()=>{if(insight.dataset.mood==='愤怒'){document.querySelector('.release-card').scrollIntoView({behavior:'smooth',block:'center'});releasePad.focus();return}resetBreathing();breathDialog.showModal()});
+    document.querySelector('#breath-close').addEventListener('click',()=>{stopBreathing();breathDialog.close()});
+    document.querySelector('#breath-start').addEventListener('click',toggleBreathing);
+    function resetBreathing(){stopBreathing();breathElapsed=0;updateBreathUI();document.querySelector('#breath-start').textContent='开始'}
+    function stopBreathing(){clearInterval(breathInterval);breathInterval=null;breathRunning=false}
+    function toggleBreathing(){if(breathElapsed>=60)breathElapsed=0;if(breathRunning){stopBreathing();document.querySelector('#breath-start').textContent='继续';document.querySelector('#phase-note').textContent='已暂停，准备好再继续';return}breathRunning=true;document.querySelector('#breath-start').textContent='暂停';updateBreathUI();breathInterval=setInterval(()=>{breathElapsed=Math.min(60,breathElapsed+.1);updateBreathUI();if(breathElapsed>=60){stopBreathing();document.querySelector('#breath-start').textContent='再做一次';document.querySelector('#orb').textContent='做得很好';document.querySelector('#phase-note').textContent='你完成了 5 轮舒缓呼吸';showToast('一分钟完成，辛苦了')}},100)}
+    function updateBreathUI(){const phase=breathElapsed%12,orb=document.querySelector('#orb');let label,noteText;if(phase<4){label='吸气';noteText='慢慢吸气，让身体展开';orb.classList.add('expand')}else if(phase<6){label='停留';noteText='轻轻停留，不要憋紧';orb.classList.add('expand')}else{label='呼气';noteText='慢慢呼气，放松肩膀';orb.classList.remove('expand')}if(breathElapsed===0){label='准备好';noteText='5 轮舒缓呼吸';orb.classList.remove('expand')}const remaining=Math.max(0,Math.ceil(60-breathElapsed)),minutes=Math.floor(remaining/60),seconds=remaining%60;orb.textContent=label;document.querySelector('#phase-note').textContent=noteText;document.querySelector('#timer').textContent=`${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;document.querySelector('#breath-ring').style.setProperty('--progress',(breathElapsed/60)*100)}
+    breathDialog.addEventListener('cancel',stopBreathing);
+
+    const releasePad=document.querySelector('#release-pad'),releaseMessages=['再来一下也可以','这一下已经过去','把紧绷留在这里','肩膀松一点','现在，慢慢呼一口气'];
+    releasePad.addEventListener('click',e=>{releaseCount++;document.querySelector('#release-count').textContent=`${releaseCount} 次`;document.querySelector('#release-message').textContent=releaseMessages[Math.min(releaseMessages.length-1,Math.floor(releaseCount/5))];const rect=releasePad.getBoundingClientRect(),ripple=document.createElement('span');ripple.className='ripple';ripple.style.left=`${e.clientX?e.clientX-rect.left:rect.width/2}px`;ripple.style.top=`${e.clientY?e.clientY-rect.top:rect.height/2}px`;releasePad.appendChild(ripple);releasePad.classList.add('hit');setTimeout(()=>releasePad.classList.remove('hit'),120);setTimeout(()=>ripple.remove(),700);if(navigator.vibrate)navigator.vibrate(18)});
+
+    document.querySelector('#privacy-open').addEventListener('click',()=>privacyDialog.showModal());document.querySelector('#privacy-open-bottom').addEventListener('click',()=>privacyDialog.showModal());document.querySelector('#privacy-close').addEventListener('click',()=>privacyDialog.close());
+    renderHistory();updateBreathUI();
+
+    function registerWebMCP(){const context=document.modelContext;if(!context?.registerTool)return;try{void Promise.resolve(context.registerTool({name:'create_emotion_entry',title:'记录当前情绪',description:'保存一条情绪、强度、触发因素和可选备注，并在页面展示建议。',inputSchema:{type:'object',properties:{mood:{type:'string',enum:Object.keys(moodFaces)},intensity:{type:'integer',minimum:1,maximum:10},triggers:{type:'array',items:{type:'string'},maxItems:8},note:{type:'string',maxLength:200}},required:['mood','intensity'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){const record=saveRecord(input);return{id:record.id,mood:record.mood,intensity:record.intensity,saved:true}}})).catch(()=>{})}catch{}}
     registerWebMCP();
   </script>
 </body>
